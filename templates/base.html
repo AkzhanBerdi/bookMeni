@@ -11,22 +11,23 @@
     
     <nav class="navbar fixed-top bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Book Meni</a>
+          <a class="navbar-brand" href="{% url 'home' %}">Book Meni</a>
           {% if user.is_authenticated %}
             <p>Welcome, You are logged in as {{ user.username }}</p>
+            <p><a class="navbar-brand" href="{% url 'logout' %}">Log Out</a></p>
           {% else %}
-          <a class="navbar-brand" href="{% provider_login_url 'google' %}">Log in / Sign up</a>
+          <p>You are not Logged In</p>
+          <a class="navbar-brand" href="{% url 'login' %}">Log in / Sign up</a>
           {% endif %}
         </div>
     </nav>
 
-    <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
-
-    function init() {
-      gapi.load('auth2', function() {
-        /* Ready. Make a call to gapi.auth2.init or some other API */ 
-      });
-    }
+    <main>
+      <div class="container">
+        {% block content %} 
+        {% endblock %}
+      </div>
+    </main>
 
 </body>
 </html>

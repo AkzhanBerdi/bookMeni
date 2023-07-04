@@ -10,8 +10,16 @@ from django.db import transaction
 
 from .constants import ResponseMessage
 
+from allauth.account.views import LoginView
 
 class UserLoginView(ObtainAuthToken):
+
+    """
+    def get(self, request, *args, **kwargs):
+         Login page for user
+
+        """
+
     def post(self, request, *args, **kwargs):
         """ Checks for the login details of the user and sends the Token if successfully authenticated.
 
