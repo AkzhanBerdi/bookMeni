@@ -6,11 +6,45 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_RE
 from rest_framework.views import APIView
 
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.db import transaction
 
+
+
 from .constants import ResponseMessage
+from .forms import UpdateProfileForm, UpdateUserForm
 
 from allauth.account.views import LoginView
+
+
+class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = 'account/change_password.html'
+    success_message = "Successfully Changed Your Password"
+    # success_url = reverse_lazy('user-home')
+    success_url = reverse_lazy('user-home')
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect(to='users-profile')
+        else:
+            user_form = UpdateUserForm(instance=request.user)
+            profile_form = UpdateProfileForm(instance=request.user.profile)
+
+        return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+
 
 class UserLoginView(ObtainAuthToken):
 
