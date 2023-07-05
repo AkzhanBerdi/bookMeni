@@ -26,9 +26,8 @@ urlpatterns = [
     path('calendar/', include(('calender.urls', 'calender'), namespace='calender')),
     path('user/', include(('user.urls', 'user'), namespace='user')),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
-    path('account/', include('django.contrib.auth.urls'), name='login'),
+    # path('account/', include('django.contrib.auth.urls'), name='login'),
     path('account/', include('allauth.urls')),
-    # path('accounts/signup', include('allauth.urls')),
-    path('logout', LogoutView.as_view()),
+    path('logout/', LogoutView.as_view()),
     path('login/', user.UserLoginView.as_view(), name='login.html'),
 ]

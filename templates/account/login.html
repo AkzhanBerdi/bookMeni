@@ -10,6 +10,17 @@
 <center><form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
+        {% if form.errors %}
+            <p style="color: crimson;">Your username and password didn't match. Please try again.</p>
+        {% endif %}
+        {% if next %}
+            {% if user.is_authenticated %}
+                <p>Your account doesn't have access to this page. To proceed,
+                please login with an account that has access.</p>
+            {% else %}
+                <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
     <button style="height: 35px; width: 185px;" type="submit">Login</button>
     <div>
         <button style="height: 35px; width: 185px;" onclick="location.href = '/account/signup' ">Sign Up</button>
@@ -23,6 +34,9 @@
             Login with Google
         </a>
     </div>
+    <p><a href="{% url 'account_reset_password' %}">Lost password?</a></p>
+
+
     
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">

@@ -14,10 +14,10 @@
           <a class="navbar-brand" href="{% url 'home' %}">Book Meni</a>
           {% if user.is_authenticated %}
             <p>Welcome, You are logged in as {{ user.username }}</p>
-            <p><a class="navbar-brand" href="{% url 'logout' %}">Log Out</a></p>
+            <p><a class="navbar-brand" href="{% url 'account_logout' %}?next={{ request.path }}">Log Out</a></p>
           {% else %}
           <p>You are not Logged In</p>
-          <a class="navbar-brand" href="{% url 'login' %}">Log in / Sign up</a>
+          <a class="navbar-brand" href="{% url 'account_login' %}?next={{ request.path }}">Log in / Sign up</a>
           {% endif %}
         </div>
     </nav>
