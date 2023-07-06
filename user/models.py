@@ -10,9 +10,6 @@ class Profile(models.Model):
     avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
     bio = models.TextField()
 
-    def __str__(self):
-        return self.user.username
-
     def save(self, *args, **kwargs):
         super().save()
 
@@ -22,3 +19,6 @@ class Profile(models.Model):
             new_img = (100, 100)
             img.thumbnail(new_img)
             img.save(self.avatar.path)
+
+    def __str__(self):
+        return self.user.username

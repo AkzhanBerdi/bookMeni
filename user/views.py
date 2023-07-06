@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import get_user_model
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -22,6 +23,16 @@ from .forms import UpdateProfileForm, UpdateUserForm
 from allauth.account.views import LoginView
 
 
+# def profile(request, username):
+#     if request.method == 'POST':
+#         pass
+
+#     user = get_user_model().objects.filter(username=username).first()
+#     if user:
+#         form = UpdateUserForm(instance=user)
+#         return render(request, 'user/profile.html', context={'form': form})
+#     return redirect('home')
+
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'account/change_password.html'
     success_message = "Successfully Changed Your Password"
@@ -29,8 +40,9 @@ class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     success_url = reverse_lazy('user-home')
 
 @login_required
-def profile(request):
+def profile(request, username):
     if request.method == 'POST':
+        user = request.user
         user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
 
@@ -38,13 +50,18 @@ def profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, 'Your profile is updated successfully')
-            return redirect(to='users-profile')
+            return redirect('profile', user_form.username)
         else:
             user_form = UpdateUserForm(instance=request.user)
             profile_form = UpdateProfileForm(instance=request.user.profile)
 
-        return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
-
+        return render(request, 'account/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    
+    user = get_user_model().objects.filter(username=username).first()
+    if user:
+        form = UpdateUserForm(instance=user)
+        return render(request, 'account/profile.html', context={'form': form})
+    return redirect('home')
 
 class UserLoginView(ObtainAuthToken):
 

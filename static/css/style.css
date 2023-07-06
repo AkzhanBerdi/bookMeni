@@ -7,3 +7,7 @@
 #survey-form{
 margin:auto;  
 }
+
+body {
+  padding-top: 72px;
+}
