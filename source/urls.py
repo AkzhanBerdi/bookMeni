@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from django.contrib.auth.views import LogoutView
 from django.conf.urls.static import static
 from django.conf import settings
 from calender import views
@@ -25,13 +24,10 @@ from user import views as user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('calendar/', include(('calender.urls', 'calender'), namespace='calender')),
-    path('user/', include(('user.urls', 'user'), namespace='user')),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
-    # path('account/', include('django.contrib.auth.urls'), name='login'),
+
     path('account/', include('allauth.urls')),
-    path('logout/', LogoutView.as_view()),
-    path('login/', user.UserLoginView.as_view(), name='login.html'),
-    path('password-change/', user.ChangePasswordView.as_view(), name='password_change'),
-    path('profile/<username>',user.profile, name='profile'),
+    path('calendar/', include(('calender.urls', 'calender'), namespace='calender')),
+    path('', include('user.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

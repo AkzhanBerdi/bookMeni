@@ -1,49 +1,35 @@
-{% extends 'base.html' %}
-
-{% block title %}Login{% endblock %}
-
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
 {% load socialaccount %}
-{% load account %}
-
-<center><h1> Login </h1></center>
-<center><form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-        {% if form.errors %}
-            <p style="color: crimson;">Your username and password didn't match. Please try again.</p>
-        {% endif %}
-        {% if next %}
-            {% if user.is_authenticated %}
-                <p>Your account doesn't have access to this page. To proceed,
-                please login with an account that has access.</p>
-            {% else %}
-                <p>Please login to see this page.</p>
-            {% endif %}
-        {% endif %}
-    <button style="height: 35px; width: 185px;" type="submit">Login</button>
-    <div>
-        <button style="height: 35px; width: 185px;" onclick="location.href = '/account/signup' ">Sign Up</button>
-    </div>
-    <div class="col s12 m6 offset-m3 center-align">
-        <a class="oauth-container btn darken-4 white black-text" href="{% provider_login_url 'google' %}" style="text-transform:none">
-            <div class="left">
-                <img width="20px" style="margin-top:7px; margin-right:8px" alt="Google sign-in" 
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Log In</legend>
+                    {{ form|crispy }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Login</button>
             </div>
-            Login with Google
-        </a>
+        </form>
+        <div class="col s12 m6 offset-m3 center-align">
+            <a class="oauth-container btn darken-4 white black-text" href="{% provider_login_url 'google' %}" style="text-transform:none">
+                <div class="left">
+                    <img width="20px" style="margin-top:7px; margin-right:8px" alt="Google sign-in" 
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                </div>
+                Login with Google
+            </a>
+        </div>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
+            </small><br>
+            <small class="text-muted">
+                <a href="{% url 'password_change' %}">Forgot password?</a>
+            </small>
+        </div>
     </div>
-    <p><a href="{% url 'account_reset_password' %}">Lost password?</a></p>
-
-
-    
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-    
-</form></center>
-
-{% load static %}
-
-
-{% endblock %}
+{% endblock content %}

@@ -11,15 +11,15 @@
         <div class="media">
             <div class="media-body">
                 <h2 class="account-heading">{{ form.instance.username }}
-                    <small class="text-muted">({{ form.instance.status }})</small>
+                    <!-- <small class="text-muted">({{ form.instance.status }})</small> -->
                 </h2>
                 <p class="text-secondary">{{ form.instance.first_name }} {{ form.instance.last_name }}</p>
                 <p class="text-secondary">{{ form.instance.email }}</p>
-                <p class="text-secondary">{{ form.instance.description }}</p>
+                <p class="text-secondary">{{ form.instance.bio }}</p>
             </div>
         </div>
 
-        {% if profile.username == form.instance.username %}
+        {% if user.username == form.instance.username %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Edit Profile Information</legend>
                 <div class="form-row">
@@ -30,10 +30,10 @@
                         {{ form.last_name|as_crispy_field }}
                     </div>
                 </div> 
-                {{ form.email|as_crispy_field }}
-                {{ form.description|as_crispy_field }}
 
-                <a href="/">Change password?</a>
+                {{ form.bio|as_crispy_field }}
+
+                <a href="{% url 'password_change' %}">Change password?</a>
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Update</button>

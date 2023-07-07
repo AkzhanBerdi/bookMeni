@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, logout
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -18,20 +18,33 @@ from django.db import transaction
 
 
 from .constants import ResponseMessage
-from .forms import UpdateProfileForm, UpdateUserForm
+from .forms import UpdateProfileForm, UpdateUserForm, UserRegistrationForm
 
 from allauth.account.views import LoginView
 
 
-# def profile(request, username):
-#     if request.method == 'POST':
-#         pass
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('/')
+        else:
+            for error in list(form.errors.values()):
+                print(request, error)
 
-#     user = get_user_model().objects.filter(username=username).first()
-#     if user:
-#         form = UpdateUserForm(instance=user)
-#         return render(request, 'user/profile.html', context={'form': form})
-#     return redirect('home')
+    else:
+        form = UserRegistrationForm()
+
+    return render(
+        request = request,
+        template_name = 'account/register.html',
+        context = {'form': form}
+    )
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'account/change_password.html'
@@ -41,35 +54,37 @@ class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
 
 @login_required
 def profile(request, username):
+
     if request.method == 'POST':
         user = request.user
-        user_form = UpdateUserForm(request.POST, instance=request.user)
-        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        # user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=user)
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
+        if profile_form.is_valid():
+            # user_form.save()
             profile_form.save()
-            messages.success(request, 'Your profile is updated successfully')
-            return redirect('profile', user_form.username)
-        else:
-            user_form = UpdateUserForm(instance=request.user)
-            profile_form = UpdateProfileForm(instance=request.user.profile)
+            messages.success(request, f'{profile_form} Your profile is updated successfully')
+            return redirect('profile', profile_form.username)
+        # else:
+        #     # user_form = UpdateUserForm(instance=request.user)
+        #     profile_form = UpdateProfileForm(instance=request.user.profile)
 
-        return render(request, 'account/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+        for error in list(profile_form.errors.values()):
+            messages.error(request, error)
+
+        # return render(request, 'account/profile.html', {'user_form': user_form, 'profile_form': profile_form})
     
     user = get_user_model().objects.filter(username=username).first()
     if user:
-        form = UpdateUserForm(instance=user)
+        form = UpdateProfileForm(instance=user)
+        form.fields['bio'].widget.attrs = {'rows': 1}
         return render(request, 'account/profile.html', context={'form': form})
+
     return redirect('home')
+    # return render(request, 'profile.html',{'user': user})
+
 
 class UserLoginView(ObtainAuthToken):
-
-    """
-    def get(self, request, *args, **kwargs):
-         Login page for user
-
-        """
 
     def post(self, request, *args, **kwargs):
         """ Checks for the login details of the user and sends the Token if successfully authenticated.
