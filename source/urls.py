@@ -21,11 +21,13 @@ from django.conf.urls.static import static
 from django.conf import settings
 from calender import views
 from user import views as user
+from articles import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
 
+    path('articles/', include('articles.urls.articles_urls')),
     path('account/', include('allauth.urls')),
     path('calendar/', include(('calender.urls', 'calender'), namespace='calender')),
     path('', include('user.urls')),

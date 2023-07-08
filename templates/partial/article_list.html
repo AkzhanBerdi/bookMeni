@@ -1,0 +1,11 @@
+{% if is_paginated %}
+    {% include 'partial/pagination.html' %}
+{% endif %}
+
+<ul class="list-group">
+    {% for article in articles %}
+        <li class="list-group-item">
+            <a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
+        </li>
+    {% endfor %}
+</ul>

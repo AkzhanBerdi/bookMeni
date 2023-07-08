@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- {% include 'partial/search_form.html' %} -->
+
+    <table class="'table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Author</th>
+                <th scope="col">Created at</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for article in articles %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></td>
+                <td>{{ article.author }}</td>
+                <td>{{ article.created_at|date:"d M Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %} 
+        {% include 'partial/pagination.html' %} 
+    {% endif %}
+
+<div class="mt-3">
+    <a href="{% url 'article_create' %}" class="btn btn-success">Create new</a>
+</div>
+
+{% endblock %}

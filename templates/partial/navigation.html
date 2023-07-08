@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'main' %}">Learning by Doing</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'article_list' %}">Articles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'article_create' %}">Input Article</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'author_create' %}">Input Author</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'author_list' %}">Author List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'genre_list' %}">Genre List</a>
+          </li>
+          {% if not request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="btn btn-info" href="{% url 'accounts:login' %}?next={{ request.get_full_path }}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-info" href="{% url 'accounts:user_registration' %}?next={{ request.get_full_path }}">Sign up</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <p> Hello <a href="{% url 'accounts:user_detail' user.pk %}"> {{ user.username }}</a></p>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-info" href="{% url 'accounts:logout' %}?next={{ request.get_full_path }}"> Logout </a>
+          </li>
+          {% endif %}
+        </ul>
+        <form class="d-flex" role="search">
+          <input name="search" class="form-control me-2" type="search" placeholder="Find" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Find</button>
+        </form>
+      </div>
+    </div>
+</nav>

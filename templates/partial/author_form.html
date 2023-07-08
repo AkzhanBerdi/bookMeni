@@ -1,0 +1,32 @@
+<form action="{{ link }}" method="POST">
+    {% csrf_token %}
+
+    <div class="mb-3"> 
+        <label for="first_name" class="form-label">First name</label>
+        {% if errors.first_name %}
+            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Input your name" 
+                value="{{ author.first_name }}" style="border: 1px solid red">
+            <div style="color: red; font-size: 12px"> {{ errors.first_name }}</div>
+        {% else %}
+            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Input your name" 
+                value="{{ author.first_name }}">
+        {% endif %}
+    </div>
+
+    <div class="mb-3"> 
+        <label for="last_name" class="form-label">Last name</label>
+        {% if errors.last_name %}
+            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Input your last name" 
+                value = "{{ author.last_name }}" style="border: 1px solid red"  >
+            <div style="color: red; font-size: 12px"> {{ errors.last_name }} </div>
+        {% else %}
+            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Input your last name" 
+                value = "{{ author.last_name }}">
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-success">{{ button_name }}</button>
+    {% if button_name == 'Save' %}
+        <a href="{ url 'author_delete' author.pk %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+</form>

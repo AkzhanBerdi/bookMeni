@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Edit article</h1>
+
+<form action="{% url 'article_update' article.pk %}" method="POST">
+    {% csrf_token %}
+
+    {{ form.errors }}
+
+    <div class="mb-3"> 
+        <label for="title" class="form-label">Article</label>
+        <input type="text" class="form-control" name="title" id="title" placeholder="Input your name" value="{{ article.title }}">
+    </div>
+
+        <div class="mb-3"> 
+            <label for="author" class="form-label">Author</label>
+            <select class="form-select" id="author" name="author">
+                <option selected>Choose Author</option>
+                {% for author in authors %} 
+                    <option value="{{ author.pk }} {% if author.pk == article.author.pk %}selected{% endif %}">
+                        {{ author }}
+                    </option>
+                {% endfor %} 
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="body" class="form-label">Type here</label>
+            <textarea class="form-control" name="body" id="body" rows="3">{{ article.body }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+{% endblock%}

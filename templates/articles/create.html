@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Create article</h1>
+
+<form action="{% url 'article_create' %}" method="POST">
+    {% csrf_token %}
+
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+
+    <div class="mb-3"> 
+        <label for="title" class="form-label">Article</label>
+        <input type="text" class="form-control" name="title" id="title" placeholder="Article Name">
+
+        {% for error in form.title.errors %}
+            <div style="color:red; font-size: 10px;">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <label for="body" class="form-label">Type here</label>
+        <textarea class="form-control" name="body" id="body" rows="3"></textarea>
+
+        {% for error in form.body.errors %}
+            <div style="color:red; font-size: 10px;">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <select class="form-select" multiple aria-label="multiple select example" name="tags">
+            {% for tag in tags %}
+                <option value="{{ tag.id }}">{{ tag }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {% for error in form.tag.errors %}
+        <div style="color:red; font-size: 10px;">{{ error }}</div>
+    {% endfor %}
+
+
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+{% endblock%}

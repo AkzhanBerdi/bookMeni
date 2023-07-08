@@ -1,0 +1,54 @@
+{% extends 'base.html'%}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ article.title }}</h5>
+            <h5 class="card-title">{{ article.author }}</h5>
+            <p class="card-text">{{ article.body }}</p>
+            <div>
+                  {% if perms.articles.change_article %}
+                      <a class="btn btn-primary" href="{% url 'article_update' article.pk %}" role="button">Edit this article</a>
+                  {% endif %}
+                  {% if perms.articles.delete_article %}
+                      <a class="btn btn-danger" href="{% url 'article_delete' article.pk %}" role="button">Delete this article</a>
+                  {% endif %}
+            </div>
+
+            <div calss="mt-5">
+              Tags: {% for tag in article.tags.all %}
+                {{ tag.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %} 
+            </div>
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <ul class="list-group">
+          {% for comment in comments %}
+            <li class="list-group-item mb-3">
+              <div> @{{comment.author }}</div> 
+              <div>{{ comment.text }} </div>
+              <div style="font-size: 10px; color: grey;"> {{comment.created_at}} </div>
+              <div>
+                <a href="{% url 'update_comment' comment.pk %}" class="btn btn-primary btn-sm"> Edit </a>
+                <a href="{% url 'delete_comment' comment.pk %}" class="btn btn-danger btn-sm"> Delete </a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <a href="{% url 'add_comment' article.pk %}" class="btn btn-success"> Add a comment </a>
+      <!-- <div>
+        <form action="{% url 'add_comment' article.pk %}" method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" class="btn btn-success" value="Leave a comment">
+        </form>
+      </div> -->
+    </div>
+  </div>
+      {% endblock %}

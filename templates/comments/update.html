@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form action="{% url 'update_comment' comment.pk %}" method="POST" style="width: 30rem;" class="mt-5">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.text.id_for_label }}">{{ form.text.label }}</label>
+            <textarea class="form-control" name="text" id="{{ form.text.id_for_label }}" rows="4">{{ form.text.value }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.author.id_for_label }}">{{ form.author.label }}</label>
+            <input class="form-control" type="text" name="author" id="{{ form.author.id_for_label }}" value="{{ form.author.value }}">
+        </div>
+
+        <input type="submit" class="btn btn-success" value="Сохранить">
+    </form>
+{% endblock %}
