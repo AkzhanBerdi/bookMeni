@@ -32,7 +32,7 @@ class UpdateUserForm(forms.ModelForm):
         fields = ['username', 'email']
 
 class UpdateProfileForm(forms.ModelForm):
-    user = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'row': 1}))
+    # user = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'row': 1}))
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'row': 1}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'row': 1}))
     avatar = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}))

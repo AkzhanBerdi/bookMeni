@@ -14,7 +14,7 @@ class ArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ('author',)
+        fields = ('title', 'author', 'body')
 
 class SearchForm(forms.Form):
     search = forms.CharField(max_length=100, required=False, label='Search')

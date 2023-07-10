@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 <h1>Create article</h1>
 
@@ -10,22 +10,16 @@
         <div class="alert alert-danger">{{ error }}</div>
     {% endfor %}
 
-    <div class="mb-3"> 
-        <label for="title" class="form-label">Article</label>
-        <input type="text" class="form-control" name="title" id="title" placeholder="Article Name">
-
+    <!-- <div class="mb-3">
+        {{ form.title|as_crispy_field }}
         {% for error in form.title.errors %}
             <div style="color:red; font-size: 10px;">{{ error }}</div>
         {% endfor %}
-    </div>
+    </div> -->
 
     <div class="mb-3">
-        <label for="body" class="form-label">Type here</label>
-        <textarea class="form-control" name="body" id="body" rows="3"></textarea>
-
-        {% for error in form.body.errors %}
-            <div style="color:red; font-size: 10px;">{{ error }}</div>
-        {% endfor %}
+        <!-- {{ form.body|as_crispy_field }} -->
+        {{ form|crispy }}
     </div>
 
     <div class="mb-3">

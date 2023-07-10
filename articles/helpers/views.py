@@ -51,6 +51,16 @@ class CustomListView(TemplateView, ParamMixin):
         context[self.context_object_key] = self.get_object()
         return context
 
+    def get_objects(self):
+        return self.model.objects.all()
+
+class CustomDetailView(TemplateView, ParamMixin):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[self.context_object_key] = self.get_object()
+        return context
+
 class CustomCreateView(View, ParamMixin):
 
     def get(self, request, *args, **kwargs):
@@ -86,13 +96,17 @@ class CustomUpdateView(View, ParamMixin):
 
     def get_context_data(self, **kwargs):
         context = self.kwargs.copy()
-        context[self.context_object_key] = self.object
+        context[self.context_object_name] = self.object
         context.update(kwargs)
         return context
 
     def form_valid(self, form):
         self.object = form.save()
-        return redirect(self.request, self.template_name, context=context)
+        return redirect(self.get_redirect_url())
+
+    def form_invalid(self,form):
+        context = self.get_context_data(form=form)
+        return render(self.request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -103,7 +117,7 @@ class CustomUpdateView(View, ParamMixin):
             return self.form_invalid(form)
 
 class CustomDeleteView(View, ParamMixin):
-    confirm_delete = True
+    confirm_deletion = True
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -122,4 +136,4 @@ class CustomDeleteView(View, ParamMixin):
         self.object.delete()
 
     def get_context_data(self, **kwargs):
-        return {self.context_object_key: self.object}
+        return {self.context_object_name: self.object}

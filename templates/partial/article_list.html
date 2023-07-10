@@ -3,9 +3,11 @@
 {% endif %}
 
 <ul class="list-group">
-    {% for article in articles %}
-        <li class="list-group-item">
-            <a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
-        </li>
+    {% for article in articles %}      
+        {% if articles.author == desired_user %}    
+            <li class="list-group-item">
+                <a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
+            </li>
+        {% endif %}
     {% endfor %}
 </ul>

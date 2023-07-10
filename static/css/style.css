@@ -1,13 +1,31 @@
-#centerDiv{
-  height: 100%;
-  width: 100%;
-  display: flex;
+.text-container {
+  margin-left: 300px;
+  max-width: 840px;
+  font-family: 'Times New Roman', Times, serif;
+  line-height: 1.5;
 }
-
-#survey-form{
-margin:auto;  
+.header {
+  font-size: 22px;
 }
-
-body {
-  padding-top: 72px;
+.body {
+  font-size: 22px;
+}
+.tail {
+  font-size: 22px;
+}
+/* Media query for screens smaller than 600px */
+@media (max-width: 600px) {
+  .text-container {
+    margin-left: 10px; /* Adjust margin for smaller screens */
+    max-width: 100%; /* Make the container width responsive */
+  }
+  .header {
+    font-size: 18px; /* Decrease font size for smaller screens */
+  }
+  .body {
+    font-size: 18px; /* Decrease font size for smaller screens */
+  }
+  .tail {
+    font-size: 18px; /* Decrease font size for smaller screens */
+  }
 }

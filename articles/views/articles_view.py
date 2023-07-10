@@ -4,13 +4,13 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import urlencode
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 from ..forms import ArticleForm, SearchForm
 from ..helpers.views import CustomCreateView, CustomUpdateView, CustomDeleteView
 from ..models import Article, Author, Tag
 
-class ArticleCreateView(CustomCreateView):
+class ArticleCreateView(CustomCreateView, CreateView):
     template_name = 'articles/create.html'
     form_class = ArticleForm
     model = Article
@@ -26,12 +26,12 @@ class ArticleCreateView(CustomCreateView):
         return super().form_valid(form)
 
     def get_redirect_url(self):
-        return reverse('article_detail', kwargs={'pk': self.objects.pk})
+        return reverse('article_detail', kwargs={'pk': self.object.pk})
 
 
 class ArticleListView(ListView):
     model = Article
-    context_object_key = 'articles'
+    context_object_name = 'articles'
     template_name = 'articles/list.html'
     ordering = ['-created_at']
     paginate_by = 5
@@ -51,8 +51,8 @@ class ArticleListView(ListView):
             return self.form.cleaned_data['search']
         return None
 
-    def get_context_data(self, *, object_lsit=None, **kwargs):
-        context = super().get_context_data(object_list=None, **kwargs)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
         context['form'] = self.form
         if self.search_value:
             context['query'] = urlencode({'search': self.search_value})
@@ -61,7 +61,7 @@ class ArticleListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.search_value:
-            query = Q(title__icontains=self.search_value) | Q(author__first_name__Icontains=self.search_value)
+            query = Q(title__icontains=self.search_value) | Q(author__first_name__icontains=self.search_value)
             queryset = queryset.filter(query)
         return queryset
 
@@ -72,7 +72,7 @@ def article_detail_view(request, *args, **kwargs):
 class ArticleDetailView(PermissionRequiredMixin, DetailView):
     template_name = 'articles/detail.html'
     model = Article
-    permission_required = ('articles.can_read_article',)
+    permission_required = ('articles.article_readers',)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,22 +86,23 @@ class ArticleUpdateView(PermissionRequiredMixin, CustomUpdateView):
     template_name = 'articles/update.html'
     form_class = ArticleForm
     model = Article
-    context_object_key = 'article'
+    context_object_name = 'article'
     permission_required = ['articles.change_article', 'articles.delete_article']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['author'] = Author.objects.all()
+        context['authors'] = get_user_model().objects.all()
         return context
 
     def get_redirect_url(self):
-        return reverse('article_detail', kwargs={'pk': self.objects.pk})
+        return reverse('article_detail', kwargs={'pk': self.object.pk})
 
 
 class ArticleDeleteView(CustomDeleteView):
     template_name = 'articles/delete.html'
     model = Article
-    context_object_key = 'article'
+    context_object_name = 'article'
+    success_url = reverse_lazy('profile')
 
     def get_redirect_url(self):
-        return reverse_lazy('article_list')
+        return reverse_lazy('home')

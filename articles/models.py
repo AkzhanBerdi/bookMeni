@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 
 class Author(models.Model):
@@ -16,7 +17,7 @@ class Article(models.Model):
         get_user_model(),
         on_delete = models.SET_DEFAULT,
         default = 1,
-        related_name = 'ariticle'
+        related_name = 'article'
     )
     body = models.TextField(max_length=3000, null=False, blank=False)
     is_deleted = models.BooleanField(default=False)
@@ -34,7 +35,18 @@ class Article(models.Model):
     class Meta:
         verbose_name = 'Article'
         verbose_name_plural = 'Articles'
-        #permission TBA
+        permissions = [
+            ('can_read_article', '有权限读文章')
+        ]
+
+    @classmethod
+    def create_permissions(cls):
+        content_type = ContentType.objects.get_for_model(cls)
+        Permission.objects.get_or_create(
+            codename='view_article',
+            name='Can view article',
+            content_type=content_type,
+        )
 
 class Comment(models.Model):
     article = models.ForeignKey('articles.Article', on_delete=models.CASCADE, related_name='comments')
