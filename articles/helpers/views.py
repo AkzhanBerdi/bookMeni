@@ -52,7 +52,7 @@ class CustomListView(TemplateView, ParamMixin):
         return context
 
     def get_objects(self):
-        return self.model.objects.all()
+        return self.model.objects.filter(is_deleted=False)
 
 class CustomDetailView(TemplateView, ParamMixin):
 
@@ -130,7 +130,7 @@ class CustomDeleteView(View, ParamMixin):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.perform_delete()
-        return redirect(self.get_redirect_url())
+        return redirect('home')
 
     def perform_delete(self):
         self.object.delete()

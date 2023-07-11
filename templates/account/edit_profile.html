@@ -6,7 +6,7 @@
 
  <fieldset class="form-group">
      <legend class="border-bottom mb-4">Edit Profile Information</legend>
-     <form method="post">
+     <form method="post" action="{% url 'profile' request.user.username %}">
         {% csrf_token %}
         <div class="form-row">
             <div class="form-group col-md-6 mb-0">

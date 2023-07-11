@@ -15,17 +15,19 @@
 
         <tbody>
             {% for article in articles %}
+            {% if article.is_deleted == False %} 
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></td>
                 <td>{{ article.author }}</td>
                 <td>{{ article.created_at|date:"d M Y" }}</td>
             </tr>
+            {% endif %}
             {% endfor %}
         </tbody>
     </table>
 
-    {% if is_paginated %} 
+    {% if is_paginated %}
         {% include 'partial/pagination.html' %} 
     {% endif %}
 
@@ -33,6 +35,6 @@
     <a href="{% url 'article_create' %}" class="btn btn-success">Create new</a>
 </div>
 
-<p>{{ article.author.username}} or {{ article.author.get_full_name }} </p>
+<p>{{ article.author.username}}  {{ article.author.get_full_name }} </p>
 
 {% endblock %}

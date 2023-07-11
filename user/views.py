@@ -62,29 +62,29 @@ def profile(request, username):
         desired_user = get_object_or_404(get_user_model(), username=username)
         
     articles = Article.objects.filter(author=desired_user)
+    user_form = UpdateUserForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=request.user.profile)
 
     if request.method == 'POST':
         user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
-
-        if user_form.is_valid() and profile_form.is_valid():
+        if profile_form.is_valid():
             user_form.save()
             profile_form.save()
             messages.success(request, f'{profile_form} Your profile is updated successfully')
             return redirect('profile')
-        else:
-            user_form = UpdateUserForm(instance=request.user)
-            profile_form = UpdateProfileForm(instance=request.user.profile)
-            
 
-        return render(request, 'account/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    form = UpdateProfileForm(instance=desired_user)
+    form.fields['bio'].widget.attrs = {'rows': 1}
     
-    if desired_user:
-        form = UpdateProfileForm(instance=desired_user)
-        form.fields['bio'].widget.attrs = {'rows': 1}
-        return render(request, 'account/profile.html', context={'form': form, 'articles': articles})
-
-    return render(request, 'account/profile.html',{'desired_user': desired_user, 'articles': articles})
+    return render(request, 'account/profile.html', context={
+        'form': form,
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'desired_user': desired_user,
+        'articles': articles
+        }
+    )
 
 
 class UserLoginView(ObtainAuthToken):
@@ -138,7 +138,7 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
         return super().get_context_data(**kwargs)
 
     def get_profile_form(self):
-        form_kwargs = {'instance': self.object.profile}
+        form_kwargs = {'instance': self.object.user}
         if self.request.method == 'POST':
             form_kwargs['data'] = self.request.POST
             form_kwargs['files'] = self.request.FILES

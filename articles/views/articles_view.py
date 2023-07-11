@@ -104,5 +104,6 @@ class ArticleDeleteView(CustomDeleteView):
     context_object_name = 'article'
     success_url = reverse_lazy('profile')
 
-    def get_redirect_url(self):
-        return reverse_lazy('home')
+    def perform_delete(self):
+        self.object.is_deleted = True
+        self.object.save()

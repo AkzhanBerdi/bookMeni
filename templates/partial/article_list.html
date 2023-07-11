@@ -4,10 +4,12 @@
 
 <ul class="list-group">
     {% for article in articles %}      
-        {% if articles.author == desired_user %}    
+        {% if articles.author == desired_user %} 
+            {% if article.is_deleted == False %}   
             <li class="list-group-item">
                 <a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
             </li>
+            {% endif %}
         {% endif %}
     {% endfor %}
 </ul>
