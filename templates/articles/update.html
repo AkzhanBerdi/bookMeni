@@ -2,8 +2,6 @@
 
 {% block content %}
 <h1>Edit article</h1>
-<p> {{user}} </p>
-<p> {{authors}} </p>
 
 <form action="{% url 'article_update' article.pk %}" method="POST">
     {% csrf_token %}

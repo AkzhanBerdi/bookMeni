@@ -69,10 +69,9 @@ def article_detail_view(request, *args, **kwargs):
     article = get_object_or_404(Article, pk=kwargs.get('pk'))
     return render(request, 'articles/detail.html', context={'article': article})
 
-class ArticleDetailView(PermissionRequiredMixin, DetailView):
+class ArticleDetailView( DetailView):
     template_name = 'articles/detail.html'
     model = Article
-    permission_required = ('articles.article_readers',)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -87,7 +86,7 @@ class ArticleUpdateView(PermissionRequiredMixin, CustomUpdateView):
     form_class = ArticleForm
     model = Article
     context_object_name = 'article'
-    permission_required = ['articles.change_article', 'articles.delete_article']
+    permission_required = ['articles.change_article']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
