@@ -13,11 +13,11 @@
         {% csrf_token %}
         <div class="media">
             <div class="media-body">
-                <h2 class="account-heading">{{ user }}
-                    <small class="text-muted">({{ form.instance.status }})</small>
+                <h2 class="account-heading">{{ desired_user }}
+                    <!-- <small class="text-muted">({{ form.instance.status }})</small> -->
                 </h2>
-                <p class="text-secondary">{{ user.first_name }} {{ user.last_name }}</p>
-                <p class="text-secondary">{{ user.bio }}</p>
+                <p class="text-secondary">{{ user.profile.first_name }} {{ user.profile.last_name }}</p>
+                <p class="text-secondary">{{ user.profile.bio }}</p>
             </div>
         </div>
 

@@ -41,4 +41,4 @@ class UpdateProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        exclude = ['id']
+        fields = ['first_name', 'last_name', 'avatar', 'bio']

@@ -62,24 +62,24 @@ def profile(request, username):
         desired_user = get_object_or_404(get_user_model(), username=username)
         
     articles = Article.objects.filter(author=desired_user)
-    user_form = UpdateUserForm(instance=request.user)
+    # user_form = UpdateUserForm(instance=request.user)
     profile_form = UpdateProfileForm(instance=request.user.profile)
 
     if request.method == 'POST':
-        user_form = UpdateUserForm(request.POST, instance=request.user)
+        # user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
         if profile_form.is_valid():
-            user_form.save()
+            # user_form.save()
             profile_form.save()
             messages.success(request, f'{profile_form} Your profile is updated successfully')
-            return redirect('profile')
+            return redirect('home')
 
     form = UpdateProfileForm(instance=desired_user)
     form.fields['bio'].widget.attrs = {'rows': 1}
     
     return render(request, 'account/profile.html', context={
         'form': form,
-        'user_form': user_form,
+        # 'user_form': user_form,
         'profile_form': profile_form,
         'desired_user': desired_user,
         'articles': articles
@@ -132,10 +132,10 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
     template_name = 'account/edit_profile.html'
     context_object_name = 'profile_obj'
 
-    def get_context_data(self, **kwargs):
-        if 'profile_form' not in kwargs:
-            kwargs['profile_form'] = self.get_profile_form()
-        return super().get_context_data(**kwargs)
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields.update(self.get_profile_form().fields)
+        return form
 
     def get_profile_form(self):
         form_kwargs = {'instance': self.object.user}
@@ -145,21 +145,21 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
         return UpdateProfileForm(**form_kwargs)
 
     def get_success_url(self):
-        return reverse('account:profile', kwargs={'pk': self.object.pk})
+        # return reverse('account:profile', kwargs={'pk': self.object.pk})
+        return reverse('account:profile', kwargs={'username': self.object.user.username})
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
         profile_form = self.get_profile_form()
-        if form.is_valid() and profile_form.is_valid():
-            return self.form_valid(form, profile_form)
+        if form.is_valid():
+            return self.form_valid(form)
         else:
-            return self.form_invalid(form, profile_form)
+            return self.form_invalid(form)
 
-    def form_valid(self, form, profile_form):
-        response = super().form_valid(form)
-        profile_form.save()
-        return response
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
     def form_invalid(self, form, profile_form):
         context = self.get_context_data(form=form, profile_form=profile_form)
@@ -167,3 +167,6 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
 
     def test_func(self):
         return self.request.user == self.get_object()
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
