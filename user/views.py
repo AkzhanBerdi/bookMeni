@@ -1,5 +1,6 @@
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
@@ -87,24 +88,34 @@ def profile(request, username):
     )
 
 
-class UserLoginView(ObtainAuthToken):
+# class UserLoginView(ObtainAuthToken, LoginView):
 
-    def post(self, request, *args, **kwargs):
-        """ Checks for the login details of the user and sends the Token if successfully authenticated.
+#     def post(self, request, *args, **kwargs):
+#         """ Checks for the login details of the user and sends the Token if successfully authenticated.
 
-        Overrides the default token Authentication View for customized responses.
+#         Overrides the default token Authentication View for customized responses.
 
-        """
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError:
-            return Response(data=ResponseMessage.INVALID_LOGIN_DATA, status=HTTP_401_UNAUTHORIZED)
-        else:
-            user = serializer.validated_data['user']
-            token = Token.objects.get(user=user)
-            return Response(data={'token': token.key}, status=HTTP_200_OK)
+#         """
+#         serializer = self.serializer_class(data=request.data, context={'request': request})
+#         try:
+#             serializer.is_valid(raise_exception=True)
+#         except ValidationError:
+#             return Response(data=ResponseMessage.INVALID_LOGIN_DATA, status=HTTP_401_UNAUTHORIZED)
+#         else:
+#             user = serializer.validated_data['user']
+#             token = Token.objects.get(user=user)
+#             return Response(data={'token': token.key}, status=HTTP_200_OK)
 
+# class UserLoginView(LoginView):
+#     def form_valid(self, form):
+#         """Override the form_valid method to return the authentication token."""
+#         self.user = form.get_user()
+#         token, _ = Token.objects.get_or_create(user=self.user)
+#         return Response(data={'token': token.key}, status=HTTP_200_OK)
+
+#     def form_invalid(self, form):
+#         """Handle form validation errors."""
+#         return Response(data=ResponseMessage.INVALID_LOGIN_DATA, status=HTTP_401_UNAUTHORIZED)
 
 class UserRegisterView(APIView):
     permission_classes = []

@@ -1,5 +1,5 @@
 import datetime
-
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -8,7 +8,7 @@ class CalenderSlot(models.Model):
     """Calendar slots available for the user to book by other people.
 
     """
-    belongs_to = models.ForeignKey(to=User, related_name='created_slots', on_delete=models.CASCADE, help_text="""
+    belongs_to = models.ForeignKey(to=get_user_model(), related_name='created_slots', on_delete=models.CASCADE, help_text="""
     Stores the user the slot belogs to
     """)
     created_at = models.DateTimeField(auto_now_add=True, help_text="""
@@ -35,7 +35,7 @@ class SlotBooking(models.Model):
     slot = models.OneToOneField(to=CalenderSlot, related_name='booking_details', on_delete=models.CASCADE, help_text="""
     References to the slot that is booked.
     """)
-    booked_by = models.ForeignKey(to=User, related_name='booked_slots', on_delete=models.CASCADE, help_text="""
+    booked_by = models.ForeignKey(to=get_user_model(), related_name='booked_slots', on_delete=models.CASCADE, help_text="""
     Contains the user who has booked the slot. If it was booked by an anonymous user, it is None.
     """)
     booked_at = models.DateTimeField(auto_now_add=True, help_text="""

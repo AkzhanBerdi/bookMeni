@@ -20,8 +20,8 @@ from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
 from calender import views
-from user import views as user
-from articles import views
+from user import views as user_views
+from articles import views as articles_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +29,7 @@ urlpatterns = [
 
     path('articles/', include('articles.urls.articles_urls')),
     path('account/', include('allauth.urls')),
-    path('calendar/', include(('calender.urls', 'calender'), namespace='calender')),
-    path('', include('user.urls')),
+    path('calendar/', include('calender.urls')),
+    path('user/', include('user.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

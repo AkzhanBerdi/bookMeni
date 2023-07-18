@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Create Slots for Interval</h1>
+  <p>{{ request.user }}</p>
+  <form method="post">
+    {% csrf_token %}
+    <label for="interval_start">Interval Start:</label>
+    <input type="datetime-local" id="interval_start" name="interval_start">
+    <label for="interval_stop">Interval Stop:</label>
+    <input type="datetime-local" id="interval_stop" name="interval_stop">
+    <button type="submit">Create Slots</button>
+  </form>
+{% endblock %}

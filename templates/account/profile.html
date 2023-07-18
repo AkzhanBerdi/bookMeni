@@ -8,6 +8,9 @@
     <a class="button" href="{% url 'article_create' %}">New Article</a>
     <a class="button" href="{% url 'article_list' %}">List Article</a>
     <a class="button" href="{% url 'update_profile' user.pk %}">Edit Profile</a>
+    <a class="button" href="{% url 'slot_data' %}">Book Slot</a>
+    <a class="button" href="{% url 'slot_interval' %}">Create Slots</a>
+    <a class="button" href="{% url 'available_slots' user.id %}">Available Slots</a>
     <legend class="border-bottom mb-4">Profile Information:</legend>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
@@ -28,6 +31,19 @@
 
         
     </form>
+
+    {% if desired_user == request.user %}
+    <h1>Create Slots for Interval</h1>
+    <p>{{ request.user }}</p>
+    <form method="post" action="{% url 'slot_interval' %}">
+      {% csrf_token %}
+      <label for="interval_start">Interval Start:</label>
+      <input type="datetime-local" id="interval_start" name="interval_start">
+      <label for="interval_stop">Interval Stop:</label>
+      <input type="datetime-local" id="interval_stop" name="interval_stop">
+      <button type="submit">Create Slots</button>
+    </form>
+    {% endif %}
 
 </div>
 {% endblock content %}

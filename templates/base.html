@@ -9,7 +9,7 @@
   integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
   crossorigin="anonymous">
   <style>
-            body {
+        xbody {
             padding: 20px;
             background-color: white;
             color: black;
@@ -31,21 +31,21 @@
     }
 
     body.dark-mode .navbar {
-        background-color: #193a53; /* Set navbar background color for dark mode */
+        background-color: #ffffff; /* Set navbar background color for dark mode */
     }
 
     body.dark-mode .navbar a.navbar-brand {
-        color: #fff; /* Set navbar brand text color for dark mode */
+        color: #000000; /* Set navbar brand text color for dark mode */
     }
 
     body.dark-mode .navbar p {
-        color: #fff; /* Set welcome message text color for dark mode */
+        color: #000000; /* Set welcome message text color for dark mode */
     }
 
-    body.dark-mode .navbar a.navbar-brand,
-    body.dark-mode .navbar a.navbar-brand:hover,
-    body.dark-mode .navbar a.navbar-brand:focus {
-        color: #fff; /* Set link text color in navbar for dark mode */
+    body .navbar a.navbar-brand,
+    body .navbar a.navbar-brand:hover,
+    body .navbar a.navbar-brand:focus {
+        color: #000000; /* Set link text color in navbar for dark mode */
     }
 
     body.dark-mode .navbar a.navbar-brand:hover,
@@ -69,9 +69,13 @@
     body.dark-mode input,
     body.dark-mode select,
     body.dark-mode textarea,
-    body.dark-mode button {
-        color: #000; /* Set text color to black */
-        background-color: #fff; /* Set background color to white */
+    body.dark-mode button,
+    body.dark-mode p,
+    body.dark-mode div,
+    body.dark-mode ul
+     {
+        color: #6b6a6a; /* Set text color to black */
+
     }
 
   </style>
@@ -80,7 +84,8 @@
     
     <nav class="navbar navbar-dark bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'home' %}">Book Meni</a>
+          <a class="navbar-brand" href="{% url 'home' %}">Qazaque Life</a>
+          <button onclick="darkMode()">Darkmode</button>
           {% if user.is_authenticated %}
           <a class="navbar-brand" href="{% url 'profile' user.username %}">My_Profile</a>
             <p>Welcome, You are logged in as {{ user.username }}</p>
@@ -90,9 +95,7 @@
           <a class="navbar-brand" href="{% url 'account_login' %}">Log in / Sign up</a>
           {% endif %}
         </div>
-        <div>
-          <button onclick="darkMode()">Darkmode</button>
-      </div>
+
       <script>
             // Check if dark mode preference is stored in browser storage
           const darkModePreference = localStorage.getItem('darkMode');

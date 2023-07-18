@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Slot Data</h1>
+  {% for slot in slot_data %}
+    <p>ID: {{ slot.id }}</p>
+    <p>Start Time: {{ slot.start_time }}</p>
+    <p>End Time: {{ slot.end_time }}</p>
+    {% if slot.is_booked %}
+      <p>This slot is booked.</p>
+    {% else %}
+      <p>This slot is available for booking.</p>
+    {% endif %}
+    <hr>
+  {% empty %}
+    <p>No slots found.</p>
+  {% endfor %}
+{% endblock %}

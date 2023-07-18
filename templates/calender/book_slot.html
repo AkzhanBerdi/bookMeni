@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Book Slot</h1>
+  {{request.user}}
+  {{slot_id}}
+  <form method="post">
+    {% csrf_token %}
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description">
+    <button type="submit">Book</button>
+  </form>
+{% endblock %}

@@ -33,8 +33,10 @@
               <div>{{ comment.text }} </div>
               <div style="font-size: 10px; color: grey;"> {{comment.created_at}} </div>
               <div>
+                {% if user_passes_test %}
                 <a href="{% url 'update_comment' comment.pk %}" class="btn btn-primary btn-sm"> Edit </a>
                 <a href="{% url 'delete_comment' comment.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a>
+                {% endif %}
               </div>
             </li>
           {% endfor %}

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django.contrib.sites',
     # 'users.apps.UsersConfig',
     'allauth',
     'allauth.account',
@@ -65,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 ROOT_URLCONF = 'source.urls'
 
@@ -160,9 +163,11 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
-    # 'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+    'django.contrib.auth.backends.ModelBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend'
 ]
+
+LOGIN_URL = '/account/login/'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -183,5 +188,8 @@ LOGOUT_REDIRECT_URL = 'home'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+SESSION_COOKIE_SECURE = False  # Set to False during development
+SESSION_COOKIE_HTTPONLY = False  # Set to False during development
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

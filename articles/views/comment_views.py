@@ -1,6 +1,6 @@
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
-
+from django.contrib.auth.mixins import UserPassesTestMixin
 from ..forms import CommentForm
 from ..helpers.views import CustomCreateView, CustomUpdateView, CustomDeleteView
 from ..models import Article, Comment
@@ -27,18 +27,28 @@ class CommentCreateView(CustomCreateView):
     def get_redirect_url(self):
         return reverse('article_detail', kwargs={'pk': self.object.article.pk})
 
-class CommentUpdateView(CustomUpdateView):
+class CommentUpdateView(UserPassesTestMixin, CustomUpdateView):
     model = Comment
     template_name = 'comments/update.html'
     form_class = CommentForm
-    context_object_key = 'comment'
+    context_object_name = 'comment'
     
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
     def get_redirect_url(self):
         return reverse('article_detail', kwargs={'pk': self.object.article.pk})
 
-class CommentDeleteView(CustomDeleteView):
+class CommentDeleteView(UserPassesTestMixin, CustomDeleteView):
     model = Comment
     confirm_deletion = False
+    context_object_name = 'comment'
+    success_url = reverse_lazy('article_list')
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
 
     def get_redirect_url(self):
         return reverse_lazy('article_detail', kwargs={'pk': self.object.article.pk})
