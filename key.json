@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "bookmeni",
+  "private_key_id": "597f0b5af768cbc1dbd8ebd8e56559b4fe35751b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDOUL0c0SNEwaMp\n6k4jzgF/G6JCPvERQeoU7eAQ+ZELAOl5UHTJSWAqZVh4toE76gB53BiGwDohRM58\n05x1kDZK7ytIkGtzbMayXsmRvqU7p0chuVuCRgR+MAMHPpWRApb6/0sr22CvoHCc\nZcEWS7ez5POwoHTKRg1eoRRUa0POdOztsjXA9UqYthgjh6lR1mZtiKiUqS3a+/wl\nEJaKOMGsyOHukTJPuTr3JaGk+32vH9wPBfiT9UDCl2245/TgcCWpX61YVQgzkyvs\nZ/Qm3DP7n3ZPsy1A2B5VlqzP9LNgJ3Ub/T6gwot9ouKadLDwBeF97JXh78NIojL6\nCK7LM7pTAgMBAAECggEABPehyYsNSDgsZoHWqclbZsF9PEe/AIxd1aYN3AHg5RzQ\n15BWq+7fjKI1IlIBrsQpM3CQXw1LUeLY/Wu6bWf3kx4R67aPU0hxuniRin8byxqq\nfW4mfRk/IVXBCVsPY+xJe9sgH6Wjg/b7e43TnxF32VzXeoGEQ6rrcQqYdXzB4C0o\nti2LT/rpVTdjTM+QCPWFO2nRI+rfdhzhXIxcQnZnsrW4LrmsJ1ab1NnfUTqf2heg\nek2CwyOw8+ZruuwT9NfpBNaXtwujeWIyBGtdDv4vXVDbNs4ieCBTF8UtU46eyuNC\nWM0UajDlpx+tYzAs57qAS3/CFzLS/9EkmaCNjZ/8mQKBgQD/6/ZI1QNYuyN//4pL\na9nXhGmQhq/89XJSVyAxhp732swTG/RxFHAesvgSZkc9Utu1YX6PJrPox2NREBTe\nj80k8D1qoflJOjEG6ALImlpZC+K2Y7oHOad9xUjTpythzm2GClXFmKWGX7KvKcpf\nZ45A/2u+nDSzcvFXnzGG7x4BpQKBgQDOYOSDvWGf7jiAkLI4OkfFgb9MoMhG0dU+\nyARq5stIPgbwPplU0OlOUxSHZ6J2uK8/HZ9AOE8MFQwwMvWzUvKhx76btz0Is1kx\nOtQoAwfYYrHwDe70cqVMPIsbJRTd4VxargW8iNjQQjoZs5R5Bw7w4EXHfOOJRJ+S\n0NsTBx4alwKBgQCpng6BfwzUxlNlBkz2Z+jduljs/RevJE483JntuTerNkyDbce5\nGr6k2iEosLkOn9gWgyOKZTBgW6Yrl+j9CXoBvWg3QFskeXj9BtCxe/vdgM8l6zrk\nhwXHifYWsXlDPbnBWSA38k/im5KmHaCPUucplSAoGQek1821MUF2GQ1eMQKBgDBt\nB/HptEiky1lPmqIa+tBbe5nteFE114XdxTuYYEbZVyN0bOI8CyK31+9V4Adfmq+C\nseWN0O6S2cNNkd28LvbLOeyr+IRcISeuGC4zV9nsfrhHbLSrWiIjari54MWXpeYZ\nQ3tT2Rw1DhEN1F75ywW2emku4u1IzvDSVTWHzAaNAoGAJ5h3dYuools5T6QUDZk7\n4PVJvxvQdk4JshLjQz7cD0dlvgUHBdfUO5ppOX2OXZCHpwd47jDvfTxFL6z/RMd6\n/3nZ4nxTnoG6oHQIo9zFwNR9b+htYIvURkjAkgyzg3aBWIfl9G/Rib15roEgVMzD\nVKjzGCwL0SwzGqPV+GVRY6g=\n-----END PRIVATE KEY-----\n",
+  "client_email": "google-calendar@bookmeni.iam.gserviceaccount.com",
+  "client_id": "115818996005168632679",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/google-calendar%40bookmeni.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

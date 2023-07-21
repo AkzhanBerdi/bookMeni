@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h3>Your application succeed, please check your email!</h3>
+  <h1>Slot Details</h1>
+  <p>Interviewer: {{ request.user }}</p>
+  <a href="https://calendar.google.com/calendar/u/0/r?action=Template&text=Meet+rb211&details=Aki%0A%0ABooking+ID:+82&dates=20230720T120000Z/20230720T130000Z">Add to Google Calendar</a>
+  <hr>
+  {% if slot.is_booked %}
+  <p>This slot is booked.</p>
+  {% endif %}
+  {% endblock %}

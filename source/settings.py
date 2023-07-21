@@ -40,18 +40,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django.contrib.sites',
-    # 'users.apps.UsersConfig',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
     'rest_framework',
     'rest_framework.authtoken',
-    'calender',
-    'user',
+
     'crispy_forms',
     'crispy_bootstrap4',
+
+    'calender',
+    'user',
     'articles',
     ]
 
@@ -153,7 +155,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'user.authentication.CustomTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'UNAUTHENTICATED_USER': None
 }
@@ -163,8 +165,9 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    # 'allauth.account.auth_backends.AuthenticationBackend'
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend'
+    
 ]
 
 LOGIN_URL = '/account/login/'

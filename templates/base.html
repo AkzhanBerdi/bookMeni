@@ -84,12 +84,12 @@
     
     <nav class="navbar navbar-dark bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'home' %}">Qazaque Life</a>
+          <a class="navbar-brand" href="{% url 'home' %}">BookMeni</a>
           <button onclick="darkMode()">Darkmode</button>
           {% if user.is_authenticated %}
           <a class="navbar-brand" href="{% url 'profile' user.username %}">My_Profile</a>
             <p>Welcome, You are logged in as {{ user.username }}</p>
-            <p><a class="navbar-brand" href="{% url 'logout' %}">Log Out</a></p>
+            <p><a class="navbar-brand" href="{% url 'account_logout' %}">Log Out</a></p>
           {% else %}
           <p>You are not Logged In</p>
           <a class="navbar-brand" href="{% url 'account_login' %}">Log in / Sign up</a>

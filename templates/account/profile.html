@@ -5,12 +5,16 @@
     <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }} " style="cursor: pointer;"/>
 </div>
 <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style" style="min-height:65vh;">
-    <a class="button" href="{% url 'article_create' %}">New Article</a>
-    <a class="button" href="{% url 'article_list' %}">List Article</a>
+    {% if desired_user == request.user %}
+    <a class="button" href="{% url 'article_create' %}">New Position</a>
+    <a class="button" href="{% url 'article_list' %}">Other Positions</a>
     <a class="button" href="{% url 'update_profile' user.pk %}">Edit Profile</a>
-    <a class="button" href="{% url 'slot_data' %}">Book Slot</a>
     <a class="button" href="{% url 'slot_interval' %}">Create Slots</a>
     <a class="button" href="{% url 'available_slots' user.id %}">Available Slots</a>
+    {% endif %}
+    {% if desired_user != request.user %}
+    <a class="button" href="{% url 'available_slots' user.id %}">Book me</a>
+    {% endif %}
     <legend class="border-bottom mb-4">Profile Information:</legend>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
@@ -24,12 +28,12 @@
             </div>
         </div>
 
-        <h3 class="mt-5">Articles by {{ form.instance.username}} :</h3>
+        <h3 class="mt-5">Roles for mock interviews with {{ user.profile.first_name }} {{ user.profile.last_name }} :</h3>
         <div class="mb-5">
             {% include 'partial/article_list.html' %}
         </div>
 
-        
+<!--         
     </form>
 
     {% if desired_user == request.user %}
@@ -43,7 +47,7 @@
       <input type="datetime-local" id="interval_stop" name="interval_stop">
       <button type="submit">Create Slots</button>
     </form>
-    {% endif %}
+    {% endif %} -->
 
 </div>
 {% endblock content %}

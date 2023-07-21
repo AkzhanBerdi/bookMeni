@@ -7,6 +7,11 @@
     <p>Start Time: {{ slot.start_time }}</p>
     <p>End Time: {{ slot.end_time }}</p>
     <hr>
+    {% if slot.is_booked %}
+    <p>This slot is booked.</p>
+  {% else %}
+    <p><a href="{% url 'book_slot' slot.id %}" >This slot is available for booking.</a></p>
+  {% endif %}
   {% empty %}
     <p>No available slots.</p>
   {% endfor %}

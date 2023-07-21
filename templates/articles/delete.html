@@ -2,11 +2,11 @@
 
 {% block content %}
     <div>
-        <h3> Delete Article {{ article }}</h3>
+        <h3> Delete Positions {{ article }}</h3>
         <form action="{% url 'article_delete' article.pk %}" method="POST">
             {% csrf_token %}
             <div class="card-body">
-                <p class="card-text">Are you sure on deleting this Article {{ article.pk }}?</p>
+                <p class="card-text">Are you sure on deleting this Position {{ article.pk }}?</p>
                 <div>
                   <button type="submit" class="btn btn-danger">Delete this article</button>
                   <a class="btn btn-light" href="{% url 'article_detail' article.pk %}" role="button">Cancel</a>

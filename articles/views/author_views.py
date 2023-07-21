@@ -1,6 +1,6 @@
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
+from django.contrib.model import get_user_model
 from ..models import Author
 from ..forms import AuthorForm
 
@@ -17,9 +17,9 @@ class AuthorCreateView(CreateView):
 
 
 class AuthorListView(ListView):
-    template_name = 'authors/list.html'
-    model = Author
-    context_object_key = 'authors'
+    template_name = 'author/list.html'
+    model = get_user_model()
+    context_object_key = 'users'
     paginate_by = 5
     paginate_orphans = 1
 

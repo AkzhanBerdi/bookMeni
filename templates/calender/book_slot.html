@@ -2,12 +2,25 @@
 
 {% block content %}
   <h1>Book Slot</h1>
-  {{request.user}}
-  {{slot_id}}
-  <form method="post">
+  <p> Your interviewer {{ request.user }}</p>
+  <p> Session id {{ slot_id }} </p>
+  <form method="post" action="{% url 'book_slot' slot_id%}">
     {% csrf_token %}
-    <label for="description">Description:</label>
+    <!-- <label for="interval_start">Interval Start:</label>
+    <input type="datetime-local" id="interval_start" name="interval_start" required>
+    <br>
+    <label for="interval_stop">Interval Stop:</label>
+    <input type="datetime-local" id="interval_stop" name="interval_stop" required> -->
+    <label for="description">Enter Your Name and Position:</label>
     <input type="text" id="description" name="description">
     <button type="submit">Book</button>
   </form>
+
+  <!-- {% if booking_details %}
+    <h2>Booking Details:</h2>
+    <p>Booking ID: {{ booking_details.id }}</p>
+    {% if booking_details.meeting_link %}
+      <p>Meeting Link: <a href="{{ booking_details.meeting_link }}">Click Here</a></p>
+    {% endif %}
+  {% endif %} -->
 {% endblock %}

@@ -1,14 +1,16 @@
 from datetime import datetime, timedelta
 import time
-
+import requests
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
@@ -18,9 +20,13 @@ from .constants import ResponseMessage
 from .functions import generate_google_calendar_link
 from .models import CalenderSlot, SlotBooking
 
+from google.oauth2 import service_account
+from googleapiclient import discovery
+# from .service_account_keys import create_key
 
 class SlotDataView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
     def post(self, request, *args, **kwargs):
         """Creates a bookable slot for the logged user.
 
@@ -72,7 +78,8 @@ class SlotDataView(APIView):
 
 
 class SlotDetailsView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
     def get(self, request, *args, **kwargs):
         """Gives a detailed information of the specified slot, including details of the booking if it is booked.
 
@@ -122,8 +129,8 @@ class SlotDetailsView(APIView):
 
 
 class GetAvailableSlots(APIView):
-    permission_classes = []
-
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
     def get(self, request, *args, **kwargs):
         """Lists all the available slots of the requested user.
 
@@ -149,11 +156,12 @@ class GetAvailableSlots(APIView):
 
 
 class BookSlotView(APIView):
-    permission_classes = [AllowAny]
-    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
     # permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        slot_id = kwargs['id']
         """Retrieve the details of the requested slot.
         
         Checks if the requested slot exists and returns its details if available.
@@ -161,7 +169,7 @@ class BookSlotView(APIView):
         try:
             slot = CalenderSlot.objects.get(id=kwargs['id'])
         except CalenderSlot.DoesNotExist:
-            return Response(data=ResponseMessage.CALENDAR_SLOT_NOT_FOUND, status=HTTP_404_NOT_FOUND)
+            return Response(data=ResponseMessage.CALENDAR_SLOTS_NOT_FOUND, status=HTTP_404_NOT_FOUND)
         
         response_data = {
             "id": slot.id,
@@ -181,7 +189,7 @@ class BookSlotView(APIView):
         else:
             response_data["is_booked"] = False
 
-        return render(request, 'calender/book_slot.html', {'booking_details': response_data})
+        return render(request, 'calender/book_slot.html', {'booking_details': response_data, 'slot_id': slot_id})
         # return Response(data=response_data, status=HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
@@ -209,14 +217,43 @@ class BookSlotView(APIView):
                 "id": slot_booking_details.id,
                 "add_to_google_calendar": generate_google_calendar_link(slot_booking_details)
             }
-            # return Response(data=response_data, status=HTTP_200_OK)
-            return render(request, 'calender/book_slot.html', {'booking_details': response_data})
-    
+        
+        # meeting_title = "bookMeni"
+        # meeting_start = slot.start_time.strftime("%Y-%m-%dT%H:%M:%S")
+        # meeting_end = slot.end_time.strftime("%Y-%m-%dT%H:%M:%S")
+
+        # # credentials = service_account.Credentials.from_service_account_file('/home/rb211/capestone/bookMeni/key.json')
+        # credentials = service_account.Credentials.from_service_account_file(
+        #     '/home/rb211/capestone/bookMeni/key.json',
+        #     scopes=["https://www.googleapis.com/auth/calendar"],
+        # )
+        # calendar_id = 'google-calendar@bookmeni.iam.gserviceaccount.com'
+
+        # GMT_OFF = '+6:00'
+
+        # event = {
+        #     "summary": meeting_title,
+        #     "start": {"dateTime": meeting_start, "timeZone": GMT_OFF},
+        #     "end": {"dateTime": meeting_end, "timeZone": GMT_OFF},
+        #     "attendees":[
+        #         {"email": "akzhan.berdeyev@gmail.com"},
+        #         {"email": "akzhan.berdeyev@gmail.com"},
+        #     ]
+        # }
+
+        # service = discovery.build('calendar', 'v3', credentials=credentials)
+        # event = service.events().insert(calendarId=calendar_id, body=event).execute()
+        # meeting_link = event.get('hangoutLink')
+
+        # response_data["meeting_link"] = meeting_link
+
+        return render(request, 'calender/succeed.html', {'booking_details': response_data})
+
     def delete(self, request, *args, **kwargs):
         """Deletes the requested booking.
 
         Only the booking made by registrated users can be deleted. This is to prevent cases when anyone can delete bookings of others.
-        
+
         """
         if requested.user is None:
             return Response(data=ResponseMessage.REGISTRATION_REQUIRED, status=HTTP_401_UNAUTHORIZED)
@@ -228,7 +265,8 @@ class BookSlotView(APIView):
         
 
 class CreateSlotsForIntervalView(APIView):
-    permission_classes = [AllowAny]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     def get(self, request, *args, **kwargs):
         """
@@ -238,21 +276,26 @@ class CreateSlotsForIntervalView(APIView):
 
 
     def post(self, request, *args, **kwargs):
+
         interval_start = datetime.strptime(request.data['interval_start'], "%Y-%m-%dT%H:%M")
         interval_stop = datetime.strptime(request.data['interval_stop'], "%Y-%m-%dT%H:%M")
 
         # Get the user who is creating the slots
         user = request.user
 
-        while interval_start < interval_stop:
-            slot = CalenderSlot.objects.create(
-                start_time=interval_start,
-                end_time=interval_start + timedelta(hours=1),
-                belongs_to=user
-            )
-            interval_start += timedelta(hours=1)
+        while interval_start is None or interval_start < interval_stop:
+            if interval_start is not None:
+                slot = CalenderSlot.objects.create(
+                    start_time=interval_start,
+                    end_time=interval_start + timedelta(hours=1),
+                    belongs_to=user
+                )
+            if interval_start is None:
+                interval_start = datetime.strptime(request.data['interval_start'], "%Y-%m-%dT%H:%M")
+            else:
+                interval_start += timedelta(hours=1)
 
-        return Response(status=HTTP_201_CREATED)
+        return render(request, 'account/profile.html')
         # if not interval_start or not interval_stop:
         #     return Response({
         #         'error': 'Interval start and stop values are required'},
@@ -277,21 +320,3 @@ class CreateSlotsForIntervalView(APIView):
         #     slot_end_time = slot_end_time + timedelta(hours=1)
 
         # return Response({'created_slot_ids': created_slot_ids}, status=HTTP_200_OK)
-
-class UserLoginView(ObtainAuthToken):
-
-    def post(self, request, *args, **kwargs):
-        """ Checks for the login details of the user and sends the Token if successfully authenticated.
-
-        Overrides the default token Authentication View for customized responses.
-
-        """
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError:
-            return Response(data=ResponseMessage.INVALID_LOGIN_DATA, status=HTTP_401_UNAUTHORIZED)
-        else:
-            user = serializer.validated_data['user']
-            token = Token.objects.get(user=user)
-            return Response(data={'token': token.key}, status=HTTP_200_OK)

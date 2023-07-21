@@ -10,10 +10,10 @@
             <p class="card-text">{{ article.body }}</p>
             <div>
                   {% if perms.articles.change_article %}
-                      <a class="btn btn-primary" href="{% url 'article_update' article.pk %}" role="button">Edit this article</a>
+                      <a class="btn btn-primary" href="{% url 'article_update' article.pk %}" role="button">Edit this Position</a>
                   {% endif %}
                   {% if perms.articles.delete_article %}
-                      <a class="btn btn-danger" href="{% url 'article_delete' article.pk %}" role="button">Delete this article</a>
+                      <a class="btn btn-danger" href="{% url 'article_delete' article.pk %}" role="button">Delete this Position</a>
                   {% endif %}
             </div>
 

@@ -1,24 +1,15 @@
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 
-"""Overridden the default TokenAuthentication class to change the keyword from Token to Bearer.
-
-"""
-class CustomTokenAuthentication(TokenAuthentication):
-    keyword = 'Bearer'
-
-    def authenticate(self, request):
-        # Get the authorization header from the request headers
-        auth_header = request.headers.get('Authorization')
-
-        if auth_header is None:
-            return None
-
-        # Split the authorization header into keyword and token value
-        keyword, token = auth_header.split(' ', 1)
-
-        # Check if the keyword matches the expected keyword
-        if keyword == self.keyword:
-            # Authenticate the token and return the authenticated user
-            return self.authenticate_credentials(token)
-
-        return None
+class CustomAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request':request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email
+        })
