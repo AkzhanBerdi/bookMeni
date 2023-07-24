@@ -1962,8 +1962,8 @@
   "fields": {
     "provider": "google",
     "name": "bookMe",
-    "client_id": "241595962976-bktas1b24knip3rgbu1816ohpsr0k06s.apps.googleusercontent.com",
-    "secret": "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",
+    "client_id": "",
+    "secret": "",
     "key": ""
   }
 },
